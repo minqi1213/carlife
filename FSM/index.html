@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FSM</title>
+    <link href="css/jquery-ui.css" rel="stylesheet">
+    <link href="css/keyvalueeditor.css" rel="stylesheet">
+    <link href="http://cdn.bootcss.com/bootstrap/2.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://cdn.bootcss.com/bootstrap/2.3.2/css/bootstrap-responsive.min.css" rel="stylesheet">
+
+    <script type="text/javascript" src="js/jquery-1.11.3.js"></script>
+    <script type="text/javascript" src="js/jquery-ui.js"></script>
+    <script type="text/javascript" src="js/jquery.ui.touch-punch.min.js"></script>
+    <script type="text/javascript" src="http://cdn.bootcss.com/bootstrap/2.3.2/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/self.js"></script>
+    <script type="text/javascript" src="js/requester.js"></script>
+    <script type="text/javascript" src="js/util.js"></script>
+    <script type="text/javascript" src="js/jquery.keyvalueeditor.js"></script>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span2">
+            <div class="accordion" id="interfaces">
+                <div class="accordion-group">
+                    <div class="accordion-heading">
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#interfaces" href="#cases">接口1</a>
+                    </div>
+                    <div class="accordion-body collapse in" id="cases" >
+                        <div class="accordion-inner" id="case1">
+                            Case1
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="span10">
+            <div class="row-fluid">
+                <div class="span12">
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span8">
+                    <div class="row-fluid" id="request-url-wrapper">
+                        <div class="span1" id="request-method-container">
+                            <div class="btn-group">
+                                <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" id="http_request_type">GET<span class="caret"></span></button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a id="request-method-httpget">GET</a>
+                                    </li>
+                                    <li>
+                                        <a id="request-method-httppost">POST</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="span9" id="request-url-container">
+                            <input type="text" name="url" id="url" placeholder="Enter request URL here" autocomplete="off" style="width:100%">
+                        </div>
+                        <div class="span2 " id="submit-request">
+                            <button class="btn btn-primary btn-block" type="button" id="send">发送请求</button>
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <div class="tabbable">
+                                <ul class="nav nav-tabs">
+                                    <li class="active">
+                                        <a href="#params" data-toggle="tab">参数</a>
+                                    </li>
+                                    <li>
+                                        <a href="#checkers-return" data-toggle="tab">返回值校验</a>
+                                    </li>
+                                    <li>
+                                        <a href="#checkers-database" data-toggle="tab">数据库校验</a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="params">
+                                        <div id="url-keyvaleditor-container" class="row" style="margin-left: 0px; display: block;">
+                                            <div id="url-keyvaleditor"></div>
+                                        </div>
+                                        <div id="data">
+                                            <div class="clearfix">
+                                                <div id="data-mode-selector" class="btn-group clearfix"
+                                                     data-toggle="buttons-radio">
+                                                    <a class="btn" data-mode="params">form-data</a>
+                                                    <a class="btn" data-mode="urlencoded">x-www-form-urlencoded</a>
+                                                    <a class="btn" data-mode="raw">raw</a>
+                                                </div>
+                                                <div id="body-editor-mode-selector">
+                                                    <div class="btn-group">
+                                                        <a class="dropdown" data-toggle="dropdown">
+                                                            <span id="body-editor-mode-item-selected">Text</span>
+                                                            <span class="caret" style="margin-top: 8px;"></span>
+                                                        </a>
+                                                        <ul class="dropdown-menu">
+                                                            <li><a data-editor-mode="text" data-language="text">Text</a></li>
+                                                            <li><a data-editor-mode="javascript" data-language="json">JSON</a></li>
+                                                            <li><a data-editor-mode="xml" data-language="xml">XML</a></li>
+                                                            <li><a data-editor-mode="xml" data-language="html">HTML</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="body-data-containers">
+                                                <div id="formdata-keyvaleditor-container" class="row" style="margin-left: 0;">
+                                                    <div id="formdata-keyvaleditor"></div>
+                                                </div>
+                                                <div id="urlencoded-keyvaleditor-container" class="row" style="margin-left: 0;">
+                                                    <div id="urlencoded-keyvaleditor"></div>
+                                                </div>
+                                                <div id="body-data-container">
+                                                    <textarea name="data" id="body" tabindex="4" class="inputText"></textarea>
+                                                    <pre id="body-editor-mode-selector-format-result">
+                                                    </pre>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane" id="#checkers-return">
+                                        <div id="checker-keyvaleditor-containers" class="row" style="margin-left: 0;">
+                                            <div id="checker-keyvaleditor"></div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane" id="checkers-database">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span12">
+                        </div>
+                    </div>
+                </div>
+                <div class="span4">
+                    <div class="row-fluid">
+                        <div class="span12">
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span12">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
