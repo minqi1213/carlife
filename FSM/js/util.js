@@ -62,6 +62,7 @@ function guid() {
     return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
 }
 
+//将POST请求 URL参数转换成数组
 function getBodyVars(url, associative) {
     if (url === null) {
         return [];
@@ -104,6 +105,7 @@ function getBodyVars(url, associative) {
     }
 }
 
+//将url字符串参数转换成数组
 function getUrlVars(url, associative) {
     if (url === null) {
         return [];

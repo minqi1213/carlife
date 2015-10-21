@@ -4037,7 +4037,7 @@ pm.request = {
     editorMode:0,
     responses:[],
 
-    body:{
+    body:{  //body里所有函数均与HTTP POST请求 body参数有关
         mode:"params",
         data:"",
         isEditorInitialized:false,
@@ -4050,16 +4050,19 @@ pm.request = {
             this.initEditorListeners();
         },
 
+        //不知道preview是干嘛的，没有找到显示地方
         initPreview:function () {
             $(".request-preview-header-limitations").dropdown();
         },
 
+        //隐藏POST data显示部分
         hide:function () {
             pm.request.body.closeFormDataEditor();
             pm.request.body.closeUrlEncodedEditor();
             $("#data").css("display", "none");
         },
 
+        //获取POST raw形式的请求数据
         getRawData:function () {
             if (pm.request.body.isEditorInitialized) {
                 return pm.request.body.codeMirror.getValue();
@@ -4069,6 +4072,7 @@ pm.request = {
             }
         },
 
+        //将内容显示到POST raw对话框中
         loadRawData:function (data) {
             var body = pm.request.body;
 
@@ -4078,6 +4082,7 @@ pm.request = {
             }
         },
 
+        //初始化code mirror编辑器，主要应用post raw编辑
         initCodeMirrorEditor:function () {
             pm.request.body.isEditorInitialized = true;
             var bodyTextarea = document.getElementById("body");
@@ -4102,6 +4107,7 @@ pm.request = {
             pm.request.body.codeMirror.refresh();
         },
 
+        //设置post raw的请求内容形式
         setEditorMode:function (mode, language) {
             var displayMode = $("#body-editor-mode-selector a[data-language='" + language + "']").html();
             $('#body-editor-mode-item-selected').html(displayMode);
@@ -4125,6 +4131,7 @@ pm.request = {
             }
         },
 
+        //自动编辑post raw请求内容的展现格式
         autoFormatEditor:function (mode) {
           var content = pm.request.body.codeMirror.getValue(),
               validated = null, result = null;
@@ -4162,6 +4169,7 @@ pm.request = {
           }
         },
 
+        //POST请求中form-data形式
         initFormDataEditor:function () {
             var editorId = "#formdata-keyvaleditor";
 
@@ -4179,26 +4187,9 @@ pm.request = {
 
             $(editorId).keyvalueeditor('init', params);
 
-            /* 发送请求按钮 响应事件 */
-            $("#submit-request").click(function(){
-
-            });
-
-            /* 切换GET请求 响应事件 */
-            $("#request-method-httpget").click(function(){
-                $("#http_request_type").text("GET");
-                $("#http_request_type").append("<span class=\"caret\"></span>");
-                pm.request.setMethod("GET");
-            });
-
-            /* 切换POST请求 响应事件 */
-            $("#request-method-httppost").click(function(){
-                $("#http_request_type").text("POST");
-                $("#http_request_type").append("<span class=\"caret\"></span>");
-                pm.request.setMethod("POST");
-            });
         },
 
+        //POST请求中form-urlencoded形式
         initUrlEncodedEditor:function () {
             var editorId = "#urlencoded-keyvaleditor";
 
@@ -4217,7 +4208,9 @@ pm.request = {
             $(editorId).keyvalueeditor('init', params);
         },
 
+        //data相关的页面元素按钮监听函数集合
         initEditorListeners:function () {
+            //raw形式，内容格式选择按钮监听
             $('#body-editor-mode-selector .dropdown-menu').on("click", "a", function (event) {
                 var editorMode = $(event.target).attr("data-editor-mode");
                 var language = $(event.target).attr("data-language");
@@ -4236,6 +4229,7 @@ pm.request = {
             });
         },
 
+        //显示POST请求中form-data部分
         openFormDataEditor:function () {
             var containerId = "#formdata-keyvaleditor-container";
             $(containerId).css("display", "block");
@@ -4253,11 +4247,13 @@ pm.request = {
             }
         },
 
+        //隐藏POST请求中form-data部分
         closeFormDataEditor:function () {
             var containerId = "#formdata-keyvaleditor-container";
             $(containerId).css("display", "none");
         },
 
+        //显示POST请求中form-urlencoded部分
         openUrlEncodedEditor:function () {
             var containerId = "#urlencoded-keyvaleditor-container";
             $(containerId).css("display", "block");
@@ -4275,11 +4271,13 @@ pm.request = {
             }
         },
 
+        //隐藏POST请求中form-urlencoded部分
         closeUrlEncodedEditor:function () {
             var containerId = "#urlencoded-keyvaleditor-container";
             $(containerId).css("display", "none");
         },
 
+        //设置请求模式（form-data，form-urlencode，raw），触发各模式的元素展现以及响应逻辑
         setDataMode:function (mode) {
             pm.request.dataMode = mode;
             pm.request.body.mode = mode;
@@ -4312,10 +4310,12 @@ pm.request = {
             }
         },
 
+        //获取请求模式（form-data，form-urlencode，raw）
         getDataMode:function () {
             return pm.request.body.mode;
         },
 
+        //获取用户填写的Post请求中data数据（form-data，form-urlencode，raw），返回字符串
         //Be able to return direct keyvaleditor params
         getData:function (asObjects) {
             var data;
@@ -4373,6 +4373,7 @@ pm.request = {
             return data;
         },
 
+        //加载显示Post请求数据，包含三种模式（form-data，form-urlencode，raw）
         loadData:function (mode, data, asObjects) {
             var body = pm.request.body;
             body.setDataMode(mode);
@@ -4437,6 +4438,7 @@ pm.request = {
         pm.request.setMethod(this.method);
     },
 
+    //设置http header的key-value值，并展现到前端
     setHeaderValue:function (key, value) {
         var headers = pm.request.headers;
         var origKey = key;
@@ -4463,6 +4465,7 @@ pm.request = {
         $(editorId).keyvalueeditor('reset', headers);
     },
 
+    //通过类成员变量获取http header的key-value值
     getHeaderValue:function (key) {
         var headers = pm.request.headers;
         key = key.toLowerCase();
@@ -4477,6 +4480,7 @@ pm.request = {
         return false;
     },
 
+    //获取用户输入的http header的key-value值
     getHeaderEditorParams:function () {
         var hs = $('#headers-keyvaleditor').keyvalueeditor('getValues');
         var newHeaders = [];
@@ -4522,6 +4526,7 @@ pm.request = {
         }
     },
 
+    //初始化http header编辑，包括资源设定，响应函数设定
     initializeHeaderEditor:function () {
         var params = {
             placeHolderKey:"Header",
@@ -4591,6 +4596,7 @@ pm.request = {
         });
     },
 
+    //把request以json形式返回
     getAsJson:function () {
         var request = {
             url:$('#url').val(),
@@ -4604,22 +4610,26 @@ pm.request = {
         return JSON.stringify(request);
     },
 
+    //保存的当前请求到本地
     saveCurrentRequestToLocalStorage:function () {
         pm.settings.set("lastRequest", pm.request.getAsJson());
     },
 
+    //打开http header编辑页面
     openHeaderEditor:function () {
         $('#headers-keyvaleditor-actions-open').addClass("active");
         var containerId = "#headers-keyvaleditor-container";
         $(containerId).css("display", "block");
     },
 
+    //关闭http header编辑页面
     closeHeaderEditor:function () {
         $('#headers-keyvaleditor-actions-open').removeClass("active");
         var containerId = "#headers-keyvaleditor-container";
         $(containerId).css("display", "none");
     },
 
+    //获取URL中key-value值
     getUrlEditorParams:function () {
         var editorId = "#url-keyvaleditor";
         var params = $(editorId).keyvalueeditor('getValues');
@@ -4636,6 +4646,7 @@ pm.request = {
         return newParams;
     },
 
+    //初始化URL params编辑资源，响应函数
     initializeUrlEditor:function () {
         var editorId;
         editorId = "#url-keyvaleditor";
@@ -4685,12 +4696,16 @@ pm.request = {
         $(containerId).css("display", "none");
     },
 
+    //增加显示元素监听
     addListeners:function () {
+
+        //post请求中form-data，form-urlencode，raw三种模式显示选择
         $('#data-mode-selector').on("click", "a", function () {
             var mode = $(this).attr("data-mode");
             pm.request.body.setDataMode(mode);
         });
 
+        //
         $('.request-meta-actions-togglesize').on("click", function () {
             var action = $(this).attr('data-action');
 
@@ -4706,40 +4721,58 @@ pm.request = {
             }
         });
 
+        //将url的入参分解开并填写到“URL Params”中
         $('#url').keyup(function () {
             var newRows = getUrlVars($('#url').val(), false);
             $('#url-keyvaleditor').keyvalueeditor('reset', newRows);
         });
 
+        // 将请求添加到collection中
         $('#add-to-collection').on("click", function () {
             if (pm.collections.areLoaded === false) {
                 pm.collections.getAllCollections();
             }
         });
 
+        //点击“Send”按钮响应函数
         $("#submit-request").on("click", function () {
             pm.request.send("text");
         });
 
+        //点击“Preview”按钮响应函数
         $("#preview-request").on("click", function () {
             pm.request.handlePreviewClick();
         });
 
+        //点击“Preview”按钮响应函数
         $("#update-request-in-collection").on("click", function () {
             pm.collections.updateCollectionFromCurrentRequest();
         });
 
+        //取消http请求
         $("#cancel-request").on("click", function () {
             pm.request.cancel();
         });
 
+        //“Reset”按钮点击
         $("#request-actions-reset").on("click", function () {
             pm.request.startNew();
         });
 
+        //切换http请求方式
         $('#request-method-selector').change(function () {
             var val = $(this).val();
             pm.request.setMethod(val);
+        });
+
+        /* 切换GET请求 响应事件 */
+        $("#request-method-httpget").click(function(){
+            pm.request.setMethod("GET");
+        });
+
+        /* 切换POST请求 响应事件 */
+        $("#request-method-httppost").click(function(){
+            pm.request.setMethod("POST");
         });
     },
 
@@ -5498,6 +5531,10 @@ pm.request = {
         $('.request-help-actions-togglesize a').attr('data-action', 'minimize');
         $('.request-help-actions-togglesize img').attr('src', 'img/circle_minus.png');
         */
+
+        //add new
+        $("#http_request_type").text(this.method);
+        $("#http_request_type").append("<span class=\"caret\"></span>");
     },
 
     loadRequestFromLink:function (link, headers) {
@@ -5522,6 +5559,7 @@ pm.request = {
         return $.inArray(method, pm.request.methodsWithBody) >= 0;
     },
 
+    //获取http header ，返回字符串
     packHeaders:function (headers) {
         var headersLength = headers.length;
         var paramString = "";
@@ -5535,6 +5573,7 @@ pm.request = {
         return paramString;
     },
 
+    //获取http header ，返回字符串
     getPackedHeaders:function () {
         return this.packHeaders(this.headers);
     },
@@ -5758,6 +5797,7 @@ pm.request = {
         $('body').scrollTop(0);
     },
 
+    //Params数组转字符串
     getBodyParamString:function (params) {
         var paramsLength = params.length;
         var paramArr = [];

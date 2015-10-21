@@ -58,8 +58,8 @@
                         <div class="span9" id="request-url-container">
                             <input type="text" name="url" id="url" placeholder="Enter request URL here" autocomplete="off" style="width:100%">
                         </div>
-                        <div class="span2 " id="submit-request">
-                            <button class="btn btn-primary btn-block" type="button" id="send">发送请求</button>
+                        <div class="span2 ">
+                            <button class="btn btn-primary btn-block" data-loading-text="获取数据中..." data-complete-text="数据获取完成" type="button" id="submit-request">发送请求</button>
                         </div>
                     </div>
                     <div class="row-fluid">
@@ -87,7 +87,7 @@
                                                      data-toggle="buttons-radio">
                                                     <a class="btn" data-mode="params">form-data</a>
                                                     <a class="btn" data-mode="urlencoded">x-www-form-urlencoded</a>
-                                                    <a class="btn" data-mode="raw">raw</a>
+                                                   <!-- a class="btn" data-mode="raw">raw</a -->
                                                 </div>
                                                 <div id="body-editor-mode-selector">
                                                     <div class="btn-group">
