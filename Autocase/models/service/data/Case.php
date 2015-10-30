@@ -11,7 +11,7 @@
 class Service_Data_Case extends Service_Data_Db
 {
     //数据库链接key
-    private $_cluster = 'car';
+    private $_cluster = 'autotest';
     //接口表
     private $_case_table = '`autocase`';
 	
@@ -55,8 +55,15 @@ class Service_Data_Case extends Service_Data_Db
         //插入新的case记录
         $this->_db->insert($this->_case_table, $CaseItem);
         $this->_setExecuteInfo();
-				
 		$executeInfo = $this->_db_execute_info;
+		//数据库连接断了，重新连接 
+        if($executeInfo['errno'] == 2006)
+        {
+            $this->_db = Bd_Db_ConnMgr::getConn($this->_cluster);
+            $this->_db->insert($this->_case_table, $CaseItem);
+			$this->_setExecuteInfo();
+			$executeInfo = $this->_db_execute_info;
+        }
 		foreach ($executeInfo as $k => $v){
 			if($v['errno'] > 0) {
 				$success = false;
@@ -81,8 +88,14 @@ class Service_Data_Case extends Service_Data_Db
 		$success = true;
 		$this->_db->insert($this->_case_input_table, $CaseInputItem);
 		$this->_setExecuteInfo();
-
 		$executeInfo = $this->_db_execute_info;
+		if($executeInfo['errno'] == 2006)
+        {
+            $this->_db = Bd_Db_ConnMgr::getConn($this->_cluster);
+            $this->_db->insert($this->_case_input_table, $CaseInputItem);
+			$this->_setExecuteInfo();
+            $executeInfo = $this->_db_execute_info;
+        }
 		foreach ($executeInfo as $k => $v) {
 			if($v['errno'] > 0) {
 				$success = false;
@@ -108,8 +121,16 @@ class Service_Data_Case extends Service_Data_Db
 		$success = true;
 		$this->_db->insert($this->_input_from_case_table, $CaseInputItem);
 		$this->_setExecuteInfo();
-
 		$executeInfo = $this->_db_execute_info;
+		
+		if($executeInfo['errno'] == 2006)
+        {
+            $this->_db = Bd_Db_ConnMgr::getConn($this->_cluster);
+            $this->_db->insert($this->_input_from_case_table, $CaseInputItem);
+			$this->_setExecuteInfo();
+            $executeInfo = $this->_db_execute_info;
+        }
+
 		foreach ($executeInfo as $k => $v) {
 			if($v['errno'] > 0) {
 				$success = false;
@@ -134,8 +155,17 @@ class Service_Data_Case extends Service_Data_Db
 		$success = true;
 		$this->_db->insert($this->_case_result_table, $CaseResItem);
 		$this->_setExecuteInfo();
-
 		$executeInfo = $this->_db_execute_info;
+		
+		
+        if($executeInfo['errno'] == 2006)
+        {
+            $this->_db = Bd_Db_ConnMgr::getConn($this->_cluster);
+            $this->_db->insert($this->_case_result_table, $CaseResItem);
+			$this->_setExecuteInfo();
+            $executeInfo = $this->_db_execute_info;
+        }
+
 		foreach ($executeInfo as $k => $v) {
 			if($v['errno'] > 0) {
 				$success = false;
@@ -161,8 +191,15 @@ class Service_Data_Case extends Service_Data_Db
 		$success = true;
 		$this->_db->insert($this->_res_from_case_table, $CaseResItem);
 		$this->_setExecuteInfo();
-
 		$executeInfo = $this->_db_execute_info;
+		
+		if($executeInfo['errno'] == 2006)
+        {
+            $this->_db = Bd_Db_ConnMgr::getConn($this->_cluster);
+           	$this->_db->insert($this->_res_from_case_table, $CaseResItem); 
+			$this->_setExecuteInfo();
+            $executeInfo = $this->_db_execute_info;
+        }
 		foreach ($executeInfo as $k => $v) {
 			if($v['errno'] > 0) {
 				$success = false;
@@ -189,6 +226,16 @@ class Service_Data_Case extends Service_Data_Db
 		}
 		$tmp = $this->_db->select($this->_case_input_table, $fields, $conditions, null, null);
 		$this->_setExecuteInfo();
+		$executeInfo = $this->_db_execute_info;
+
+		 if($executeInfo['errno'] == 2006)
+        {
+            $this->_db = Bd_Db_ConnMgr::getConn($this->_cluster);
+            $tmp = $this->_db->select($this->_case_input_table, $fields, $conditions, null, null);
+			$this->_setExecuteInfo();
+            $executeInfo = $this->_db_execute_info;
+        }   
+
 		$result = isset($tmp[0]) ? $tmp : true;
 		if (!isset($tmp[0]) && $this->_db->errno) {
 			$this->_setError(Conf_Error::DB_EXECUTE_ERRNO);
@@ -207,6 +254,16 @@ class Service_Data_Case extends Service_Data_Db
 		$conditions = array("CaseId = $CaseId");
 		$tmp = $this->_db->select($this->_case_result_table, $fields, $conditions, null, null);
 		$this->_setExecuteInfo();
+		$executeInfo = $this->_db_execute_info;
+
+		if($executeInfo['errno'] == 2006)
+        {
+            $this->_db = Bd_Db_ConnMgr::getConn($this->_cluster);
+            $tmp = $this->_db->select($this->_case_result_table, $fields, $conditions, null, null);
+			$this->_setExecuteInfo();
+            $executeInfo = $this->_db_execute_info;
+        }
+
 		$result = isset($tmp[0]) ? $tmp : true;
 		if (!isset($tmp[0]) && $this->_db->errno) {
 			$this->_setError(Conf_Error::DB_EXECUTE_ERRNO);
@@ -223,6 +280,16 @@ class Service_Data_Case extends Service_Data_Db
 
 		$tmp = $this->_db->query("SELECT distinct(FromCaseId)  as FromCaseId FROM autocase_input_fromcase where CaseId = $CaseId");
 		$this->_setExecuteInfo();
+		$executeInfo = $this->_db_execute_info;
+
+		if($executeInfo['errno'] == 2006)
+        {
+            $this->_db = Bd_Db_ConnMgr::getConn($this->_cluster);
+            $tmp = $this->_db->query("SELECT distinct(FromCaseId)  as FromCaseId FROM autocase_input_fromcase where CaseId = $CaseId");
+			$this->_setExecuteInfo();
+            $executeInfo = $this->_db_execute_info;
+        }
+
         $result = isset($tmp[0]) ? $tmp : true;
         if (!isset($tmp[0]) && $this->_db->errno) {
             $this->_setError(Conf_Error::DB_EXECUTE_ERRNO);
@@ -238,8 +305,18 @@ class Service_Data_Case extends Service_Data_Db
 			return false;
 		}
 
-		$tmp = $this->_db_query("select a.Field, b.Value from autocase_input_fromcase as a, autocase_input_value as b where a.CaseId = $CaseId and a.FromCaseId = b.CaseId and a.FromField = b.Field");
+		$tmp = $this->_db->query("select a.Field, b.Value from autocase_input_fromcase as a, autocase_input_value as b where a.CaseId = $CaseId and a.FromCaseId = b.CaseId and a.FromField = b.Field");
 		$this->_setExecuteInfo();
+		$executeInfo = $this->_db_execute_info;
+		
+		
+        if($executeInfo['errno'] == 2006)
+        {
+            $this->_db = Bd_Db_ConnMgr::getConn($this->_cluster);
+            $tmp = $this->_db->query("select a.Field, b.Value from autocase_input_fromcase as a, autocase_input_value as b where a.CaseId = $CaseId and a.FromCaseId = b.CaseId and a.FromField = b.Field");
+			$this->_setExecuteInfo();
+        }
+
 		$result = isset($tmp[0]) ? $tmp : true;
 		if (!isset($tmp[0]) && $this->_db->errno) {
 			$this->_setError(Conf_Error::DB_EXECUTE_ERRNO);
@@ -248,15 +325,66 @@ class Service_Data_Case extends Service_Data_Db
 		return $result;
 	}
 
+	//更新autocase_input_value表
+	public function InsertOrUpdateAutocaseInput($CaseId)
+	{
+		 if (!is_object($this->_db)) {
+            return false;
+        }
+		 $tmp = $this->_db->query("select a.Field, b.Value from autocase_input_fromcase as a, autocase_input_value as b where a.CaseId = $CaseId and a.FromCaseId = b.CaseId and a.FromField = b.Field");
+        $this->_setExecuteInfo();
+		$executeInfo = $this->_db_execute_info;
+
+
+        if($executeInfo['errno'] == 2006)
+        {
+            $this->_db = Bd_Db_ConnMgr::getConn($this->_cluster);
+            $tmp = $this->_db->query("select a.Field, b.Value from autocase_input_fromcase as a, autocase_input_value as b where a.CaseId = $CaseId and a.FromCaseId = b.CaseId and a.FromField = b.Field");
+			$this->_setExecuteInfo();
+        }
+
+		if($this->_db->errno)
+		{
+			$this->_setError(Conf_Error::DB_EXECUTE_ERRNO);
+			return false;
+		}
+			
+		if(is_array($tmp))
+        {
+            for($i =  0; $i < count($tmp); $i++)
+            {
+                $field = $tmp[$i]['Field'];
+                $value = $tmp[$i]['Value'];
+                $this->_db->query("insert into autocase_input_value(CaseId, Field, Value) values($CaseId, '$field', '$value') on duplicate key update value = '$value'");
+				$this->_setExecuteInfo();
+				if($this->_db->errno)
+        		{
+            		$this->_setError(Conf_Error::DB_EXECUTE_ERRNO);
+            		return false;
+        		}   
+			}
+        }
+		return true;
+	}
+
 	//case的输入参数依赖于它的上一个case的出参
 	public function getInputFromCaseOut($CaseId)
 	{
-        if (!is_object($this->_db)) {
-            return false;
-        }
+    if (!is_object($this->_db)) {
+        return false;
+    }
 		
-		$tmp = $this->_db_query("SELECT * FROM `autocase_input_fromcase`  where FromFieldIsInput = 0 and CaseId = $CaseId order by FromCaseId");
+		$tmp = $this->_db->query("SELECT * FROM `autocase_input_fromcase`  where FromFieldIsInput = 0 and CaseId = $CaseId order by FromCaseId");
 		$this->_setExecuteInfo();
+		$executeInfo = $this->_db_execute_info;
+
+        if($executeInfo['errno'] == 2006)
+        {
+            $this->_db = Bd_Db_ConnMgr::getConn($this->_cluster);
+             $tmp = $this->_db->query("SELECT * FROM `autocase_input_fromcase`  where FromFieldIsInput = 0 and CaseId = $CaseId order by FromCaseId");
+			$this->_setExecuteInfo();
+            $executeInfo = $this->_db_execute_info;
+        }
 		$result = isset($tmp[0]) ? $tmp : true;
 		if (!isset($tmp[0]) && $this->_db->errno) {
 			$this->_setError(Conf_Error::DB_EXECUTE_ERRNO);
@@ -265,6 +393,59 @@ class Service_Data_Case extends Service_Data_Db
 		return $result;
 	}
 	
+	//case的输入参数依赖于上一个case的入参，而它的上一个case又依赖于其它的case
+	public function getInputFromCaseId($CaseId)
+	{
+		if (!is_object($this->_db)) {
+			return false;
+    		}
+		
+		$tmp = $this->_db->query("SELECT b.CaseId FROM autocase_input_fromcase as a, autocase_input_fromcase as  b  where a.CaseId = $CaseId and a.FromField = b.Field and a.FromCaseId = b.CaseId order by b.CaseId");
+		$this->_setExecuteInfo();
+		$executeInfo = $this->_db_execute_info;
+	
+		if($executeInfo['errno'] == 2006)
+        {
+            $this->_db = Bd_Db_ConnMgr::getConn($this->_cluster);
+            $tmp = $this->_db->query("SELECT b.CaseId FROM autocase_input_fromcase as a, autocase_input_fromcase as  b  where a.CaseId = $CaseId and a.FromField = b.Field and a.FromCaseId = b.CaseId order by b.CaseId");
+			$this->_setExecuteInfo();
+            $executeInfo = $this->_db_execute_info;
+        }
+
+		$result = isset($tmp[0]) ? $tmp : true;
+		if (!isset($tmp[0]) && $this->_db->errno) {
+			$this->_setError(Conf_Error::DB_EXECUTE_ERRNO);
+			$result = false;
+		}
+		return $result;
+	}
+
+	//case的运行依赖于上一个case运行完成
+	public function getCaseDependId($CaseId)
+	{
+		 if (!is_object($this->_db)) {
+        return false;
+    }
+		
+		$tmp = $this->_db->query("select FromCaseId from autocase_input_fromcase where CaseId = $CaseId and FromFieldIsInput = 2 ");
+		$this->_setExecuteInfo();
+		$executeInfo = $this->_db_execute_info;
+
+        if($executeInfo['errno'] == 2006)
+        {
+            $this->_db = Bd_Db_ConnMgr::getConn($this->_cluster);
+            $tmp = $this->_db->query("select FromCaseId from autocase_input_fromcase where CaseId = $CaseId and FromFieldIsInput = 2 ");
+			$this->_setExecuteInfo();
+            $executeInfo = $this->_db_execute_info;
+        }
+
+		$result = isset($tmp[0]) ? $tmp : true;
+		if (!isset($tmp[0]) && $this->_db->errno) {
+			$this->_setError(Conf_Error::DB_EXECUTE_ERRNO);
+			$result = false;
+		}
+		return $result;
+	}
 	public function getFromSign($CaseId)
 	{
 		if (!is_object($this->_db)) {
@@ -275,6 +456,16 @@ class Service_Data_Case extends Service_Data_Db
 		$conditions = array("CaseId = $CaseId");
 		$tmp = $this->_db->select($this->_input_from_sign_table, $fields, $conditions, null, null);
 		$this->_setExecuteInfo();
+		$executeInfo = $this->_db_execute_info;
+
+        if($executeInfo['errno'] == 2006)
+        {
+            $this->_db = Bd_Db_ConnMgr::getConn($this->_cluster);
+            $tmp = $this->_db->select($this->_input_from_sign_table, $fields, $conditions, null, null);
+			$this->_setExecuteInfo();
+            $executeInfo = $this->_db_execute_info;
+        }
+	
 		$result = isset($tmp[0]) ? $tmp : true;
 		if (!isset($tmp[0]) && $this->_db->errno) {
 			$this->_setError(Conf_Error::DB_EXECUTE_ERRNO);
@@ -293,6 +484,16 @@ class Service_Data_Case extends Service_Data_Db
 		$conditions = array("CaseId = $CaseId");
 		$tmp = $this->_db->select($this->_res_from_case_table, $fields, $conditions, null, null);
 		$this->_setExecuteInfo();
+		$executeInfo = $this->_db_execute_info;
+
+        if($executeInfo['errno'] == 2006)
+        {
+            $this->_db = Bd_Db_ConnMgr::getConn($this->_cluster);
+            $tmp = $this->_db->select($this->_res_from_case_table, $fields, $conditions, null, null);
+			$this->_setExecuteInfo();
+            $executeInfo = $this->_db_execute_info;
+        }
+
 		$result = isset($tmp[0]) ? $tmp : true;
 		if (!isset($tmp[0]) && $this->_db->errno) {
 			$this->_setError(Conf_Error::DB_EXECUTE_ERRNO);
@@ -309,6 +510,16 @@ class Service_Data_Case extends Service_Data_Db
 
 		$tmp = $this->_db->query("SELECT autocase.*, interface.* FROM autocase, interface where autocase.CaseId = $CaseId and autocase.InterfaceId = interface.InterfaceId");
 		$this->_setExecuteInfo();
+		$executeInfo = $this->_db_execute_info;
+
+        if($executeInfo['errno'] == 2006)
+        {
+            $this->_db = Bd_Db_ConnMgr::getConn($this->_cluster);
+            $tmp = $this->_db->query("SELECT autocase.*, interface.* FROM autocase, interface where autocase.CaseId = $CaseId and autocase.InterfaceId = interface.InterfaceId");
+			$this->_setExecuteInfo();
+            $executeInfo = $this->_db_execute_info;
+        }
+
 		$result = isset($tmp[0]) ? $tmp : true;	
 		if (!isset($tmp[0]) && $this->_db->errno) {
 			$this->_setError(Conf_Error::DB_EXECUTE_ERRNO);
@@ -322,16 +533,23 @@ class Service_Data_Case extends Service_Data_Db
 		if (!is_object($this->_db)) {
 			return false;
 		}
-		$tmp = $this->_db->query("SELECT * from response_validate where CaseId = $CaseId and Field = '$Field'");
-		if($tmp == array())
-		{
-			$tmp = $this->_db->query("insert into response_validate(CaseId, Field, Type, Value) values ($CaseId, '$Field', 1, '$Value')");
-		}
-		else
-		{
-			$tmp = $this->_db->query("update response_validate set Value = '$Value' where CaseId = $CaseId and Field = '$Field'");
-		}
-        return $true;
+		$this->_db->query("insert into response_validate(CaseId, Field, Type, Value) values ($CaseId, '$Field', 1, '$Value') on duplicate key update value = '$Value'");
+      	$this->_setExecuteInfo();
+        $executeInfo = $this->_db_execute_info;
+
+        if($executeInfo['errno'] == 2006)
+        {
+            $this->_db = Bd_Db_ConnMgr::getConn($this->_cluster);
+            $this->_db->query("insert into response_validate(CaseId, Field, Type, Value) values ($CaseId, '$Field', 1, '$Value') on duplicate key update value = '$Value'");
+			$this->_setExecuteInfo();
+            $executeInfo = $this->_db_execute_info;
+        }
+
+		if($this->_db->errno) {
+            $this->_setError(Conf_Error::DB_EXECUTE_ERRNO);
+            return false;
+        } 
+		return $true;
 	}
 
 	public function InsertOrUpdateInput($CaseId, $Field, $Value)
@@ -339,15 +557,22 @@ class Service_Data_Case extends Service_Data_Db
 		if (!is_object($this->_db)) {
             return false;
         }
-		$tmp = $this->_db->query("SELECT * from autocase_input_value where CaseId = $CaseId and Field = '$Field'");
-		if($tmp == array())
-		{
-			$tmp = $this->_db->query("insert into autocase_input_value(CaseId, Field, Value) values ($CaseId, '$Field','$Value')");
-		}
-		else
-		{
-			$tmp = $this->_db->query("update autocase_input_value set Value = '$Value' where CaseId = $CaseId and Field = '$Field'");
-		}
+		$this->_db->query("insert into autocase_input_value (CaseId, Field, Value) values ($CaseId, '$Field','$Value') on duplicate key update value = '$Value'");
+		$this->_setExecuteInfo();
+        $executeInfo = $this->_db_execute_info;
+
+        if($executeInfo['errno'] == 2006)
+        {
+            $this->_db = Bd_Db_ConnMgr::getConn($this->_cluster);
+            $this->_db->query("insert into autocase_input_value (CaseId, Field, Value) values ($CaseId, '$Field','$Value') on duplicatekey update value = '$Value'");
+			$this->_setExecuteInfo();
+            $executeInfo = $this->_db_execute_info;
+        }
+		if($this->_db->errno) {
+            $this->_setError(Conf_Error::DB_EXECUTE_ERRNO);
+            return false;
+        }
+        return true;
 	}
 
 	//找出FromFieldIsInput字段等于1的check点
@@ -357,6 +582,17 @@ class Service_Data_Case extends Service_Data_Db
             return false;
         }
 		$tmp = $this->_db->query("SELECT a.CaseId, a.Field, b.Value FROM  response_validate_fromcase as a,  autocase_input_value as b where a.FromCaseId = b.CaseId and a.FromField = b.Field and a.CaseId = $CaseId and a.FromFieldIsInput = 1");
+		$this->_setExecuteInfo();
+        $executeInfo = $this->_db_execute_info;
+
+        if($executeInfo['errno'] == 2006)
+        {
+            $this->_db = Bd_Db_ConnMgr::getConn($this->_cluster);
+            $tmp = $this->_db->query("SELECT a.CaseId, a.Field, b.Value FROM  response_validate_fromcase as a,  autocase_input_value as b where a.FromCaseId = b.CaseId and a.FromField = b.Field and a.CaseId = $CaseId and a.FromFieldIsInput = 1");
+			$this->_setExecuteInfo();
+            $executeInfo = $this->_db_execute_info;
+        }
+
 		$result = isset($tmp[0]) ? $tmp : true;
 		if (!isset($tmp[0]) && $this->_db->errno) {
             $this->_setError(Conf_Error::DB_EXECUTE_ERRNO);
@@ -372,6 +608,16 @@ class Service_Data_Case extends Service_Data_Db
             return false;
         }
 		$tmp = $this->_db->query("SELECT a.Field as Field FROM  response_validate_fromcase as a where a.CaseId = $CaseId and a.FromField = '$Field' and a.FromFieldIsInput = 0");
+		$this->_setExecuteInfo();
+        $executeInfo = $this->_db_execute_info;
+
+        if($executeInfo['errno'] == 2006)
+        {
+            $this->_db = Bd_Db_ConnMgr::getConn($this->_cluster);
+            $tmp = $this->_db->query("SELECT a.Field as Field FROM  response_validate_fromcase as a where a.CaseId = $CaseId and a.FromField = '$Field' and a.FromFieldIsInput = 0");
+			$this->_setExecuteInfo();
+            $executeInfo = $this->_db_execute_info;
+        }
 		$result = isset($tmp[0]) ? $tmp : true;
         if (!isset($tmp[0]) && $this->_db->errno) {
             $this->_setError(Conf_Error::DB_EXECUTE_ERRNO);
@@ -391,6 +637,16 @@ class Service_Data_Case extends Service_Data_Db
 		$conditions = array("InterfaceId = $InterfaceId");
 		$tmp = $this->_db->select($this->_case_table, $fields, $conditions, null, null);
 		$this->_setExecuteInfo();
+		$executeInfo = $this->_db_execute_info;
+
+        if($executeInfo['errno'] == 2006)
+        {
+            $this->_db = Bd_Db_ConnMgr::getConn($this->_cluster);
+            $tmp = $this->_db->select($this->_case_table, $fields, $conditions, null, null);
+			$this->_setExecuteInfo();
+            $executeInfo = $this->_db_execute_info;
+        }
+
 		$result = isset($tmp[0]) ? $tmp : true;
 		if (!isset($tmp[0]) && $this->_db->errno) {
 			$this->_setError(Conf_Error::DB_EXECUTE_ERRNO);

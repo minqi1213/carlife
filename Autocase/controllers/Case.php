@@ -88,7 +88,7 @@ class Controller_Case extends Controller_Api {
 			$params = Request_Case::filterAddResValueParams($this->_post);
 			$pageObj = new Service_Page_Case();
 			$data = $pageObj->addCaseResValue($params);
-			
+
 			$result = array(
 				'errno' => 0,
 				'errstr' => 'ok',
@@ -133,7 +133,6 @@ class Controller_Case extends Controller_Api {
 
 	public function runCaseAction() {
 		try{
-			var_dump($this->_query);
 			$pageObj = new Service_Page_Case();
 			$data = $pageObj->runCase($this->_query);
 		

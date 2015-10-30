@@ -49,7 +49,6 @@ class Service_Page_Interface extends Service_Page_Base
             throw new Exec_Exception($error, array('db_execute' => $db_execute));
         }
         unset($service);
-       var_dump($result);
-		 return $result;
+		return $result;
     }
 }

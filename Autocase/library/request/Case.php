@@ -26,7 +26,6 @@ class Request_Case
 			switch($v) {
 				case 'RequestType':
 					//0表示get请求,1表示post请求
-					var_dump($params[$v] == 0);
 					if (!isset($params[$v]) || $params[$v] == "") {
 						$errno = Conf_Error::PARAMETER_EMPTY_ERRNO;
 					} elseif (! (intval($params[$v]) == 0 || intval($params[$v]) == 1 ) ) {
@@ -34,19 +33,19 @@ class Request_Case
 					}
 					break;
 				case 'CaseDes':
-					if (!isset($params[$v]) || empty($params[$v])) {
+					if (!isset($params[$v]) || $params[$v] == "") {
 						$errno = Conf_Error::PARAMETER_EMPTY_ERRNO;
 					}
 					break;
 				case 'InterfaceId':
-					if (!isset($params[$v]) || empty($params[$v])) {
+					if (!isset($params[$v]) ||  $params[$v] == "") {
 						$errno = Conf_Error::PARAMETER_EMPTY_ERRNO;
 					} elseif (intval($params[$v]) < 0) {
 						$errno = Conf_Error::PARAMETER_ILLEGAL_ERRNO;
 					}
 					break;
 				case 'CreateBy':
-					if (!isset($params[$v]) || empty($params[$v])) {
+					if (!isset($params[$v]) || $params[$v] == "") {
 						$errno = Conf_Error::PARAMETER_EMPTY_ERRNO;
 					}
 					break;
@@ -70,14 +69,14 @@ class Request_Case
 			$errno = 0;
 			switch($v) {
 				case 'CaesId':
-					if (!isset($params[$v]) || empty($params[$v])) {
+					if (!isset($params[$v]) ||  $params[$v] == "") {
 						$errno = Conf_Error::PARAMETER_EMPTY_ERRNO;
 					} else if (intval($params[$v]) < 0) {
 						$errno = Conf_Error::PARAMETER_ILLEGAL_ERRNO;
 					}
 				case 'Field':
 				case 'Value':
-					if (!isset($params[$v]) || empty($params[$v])) {
+					if (!isset($params[$v]) || $params[$v] == "") {
 						$errno = Conf_Error::PARAMETER_EMPTY_ERRNO;
 					}
 					break;
@@ -102,21 +101,21 @@ class Request_Case
 			switch($v) {
 				case "CaesId":
 				case "FromCaseId":
-					if (!isset($params[$v]) || empty($params[$v])) {
+					if (!isset($params[$v]) || $params[$v] == "") {
 						$errno = Conf_Error::PARAMETER_EMPTY_ERRNO;
 					} else if (intval($params[$v]) < 0) {
 						$errno = Conf_Error::PARAMETER_ILLEGAL_ERRNO;
 					}
 					break;
-				case "Field":
+				/*case "Field":
 				case "FromField":
 					if (!isset($params[$v]) || empty($params[$v])) {
 						$errno = Conf_Error::PARAMETER_EMPTY_ERRNO;
 					}
-					break;
+					break;*/
 				case "FromFieldIsInput":
-					var_dump( $params[$v] == "1");
-					if (!isset($params[$v]) || !($params[$v] == "0" || $params[$v] == "1")) {
+					//0表示那个case的输出是这个case的输入，1表示那个case的输入是这个case的输入，2表示它们仅仅有依赖关系
+					if (!isset($params[$v]) || !($params[$v] == "0" || $params[$v] == "1" || $params[$v] == "2")) {
 						$errno = Conf_Error::PARAMETER_ILLEGAL_ERRNO;
 					}
 					break;
