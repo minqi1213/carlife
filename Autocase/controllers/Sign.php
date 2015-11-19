@@ -21,7 +21,8 @@ class Controller_Sign extends Controller_Api {
 			$copy [$k] = $v;
 		}           
 		ksort ( $copy );
-		$copy ['key'] = "123456"; 
+		$copy ['key'] = "a96cfe240a15911ce8ce4c916e34422d"; 
+		//var_dump($copy);
 		$signContent = urldecode ( http_build_query ( $copy ) ); 
 		$sign = md5 ( $signContent );
 		echo $sign;

@@ -115,7 +115,9 @@ class Service_Page_Case extends Service_Page_Base
 
 		$postUrl = $url;
 		$curlPost = $post_data;
-		$header[] = "Cookie:BAIDUID=AE4314AC76CD0BB5B278026F2DF63A1B:FG=1; PSTM=1436147236; BIDUPSID=E7BADF734ED2B7C9792D0C1D608C9BF2; BDUSS=TY0SEw1MGRyYXdXS0ZrRWc5REFlME9HaGtoY0JPbVpGUkhJcURZSU1SMDNOTlZWQVFBQUFBJCQAAAAAAAAAAAEAAABykT4WaXZ5MTEyMndhbmcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADenrVU3p61VN;";
+		var_dump($url);
+		var_dump($post_data);
+		$header[] = "Cookie:PSTM=1436147236; BIDUPSID=E7BADF734ED2B7C9792D0C1D608C9BF2; BDUSS=pzRH5Od0NHUTlLZ2w1WjBHbjZoTmpFeTczSXhNdDFvM2h0OUQxa2FCSHRCRU5XQVFBQUFBJCQAAAAAAAAAAAEAAABykT4WaXZ5MTEyMndhbmcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAO13G1btdxtWMH; Hm_lvt_24a72bde5fc530003072ca4b3c0b271c=1443592043,1444877253; PHPSESSID=ST-20447-hLODM9KVdw53QuuvOzk0-uuap; BDRCVFR[dG2JNJb_ajR]=mk3SLVN4HKm; BDRCVFR[-pGxjrCMryR]=mk3SLVN4HKm; BDRCVFR[feWj1Vr5u3D]=I67x6TjHwwYf0; BAIDUID=A7B22434FC07B62FE7EFBF9DE1C2587E:FG=1; _5t_trace_sid=d6e4e5949835c6b2cf27b05e9df5580b; _5t_trace_tms=1; H_PS_PSSID=1455_17619_12826_14429_10211_17001_17470_17072_17052_15277_12313_17421_17051";
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $postUrl);
 		curl_setopt($ch, CURLOPT_HEADER, 0);
@@ -144,14 +146,11 @@ class Service_Page_Case extends Service_Page_Base
 		if($o != "")
 		{
 			$get_data = substr($o, 0, -1);
+			$url = $url."?".$get_data;
 		}
-		else
-		{
-			$get_data = "";
-		}
+		var_dump($url);
 
-		$url = $url."?".$get_data;
-		$header[] = "Cookie:BAIDUID=AE4314AC76CD0BB5B278026F2DF63A1B:FG=1; PSTM=1436147236; BIDUPSID=E7BADF734ED2B7C9792D0C1D608C9BF2; BDUSS=TY0SEw1MGRyYXdXS0ZrRWc5REFlME9HaGtoY0JPbVpGUkhJcURZSU1SMDNOTlZWQVFBQUFBJCQAAAAAAAAAAAEAAABykT4WaXZ5MTEyMndhbmcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADenrVU3p61VN;";
+		$header[] = "Cookie:PSTM=1436147236; BIDUPSID=E7BADF734ED2B7C9792D0C1D608C9BF2; BDUSS=pzRH5Od0NHUTlLZ2w1WjBHbjZoTmpFeTczSXhNdDFvM2h0OUQxa2FCSHRCRU5XQVFBQUFBJCQAAAAAAAAAAAEAAABykT4WaXZ5MTEyMndhbmcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAO13G1btdxtWMH; Hm_lvt_24a72bde5fc530003072ca4b3c0b271c=1443592043,1444877253; PHPSESSID=ST-20447-hLODM9KVdw53QuuvOzk0-uuap; BDRCVFR[dG2JNJb_ajR]=mk3SLVN4HKm; BDRCVFR[-pGxjrCMryR]=mk3SLVN4HKm; BDRCVFR[feWj1Vr5u3D]=I67x6TjHwwYf0; BAIDUID=A7B22434FC07B62FE7EFBF9DE1C2587E:FG=1; _5t_trace_sid=d6e4e5949835c6b2cf27b05e9df5580b; _5t_trace_tms=1; H_PS_PSSID=1455_17619_12826_14429_10211_17001_17470_17072_17052_15277_12313_17421_17051";		
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_HEADER, 0);
@@ -164,6 +163,7 @@ class Service_Page_Case extends Service_Page_Base
 
 	private function checkResult($data, $checkResult)
 	{
+		var_dump($data);
 		for($i = 0; $i < count($checkResult); $i++)
 		{
 			$field = $checkResult[$i]['Field'];
@@ -184,29 +184,36 @@ class Service_Page_Case extends Service_Page_Base
 				}
 			}
 
+			
 			if($type == 1)
 			{
-				if($curData != $value)
+				if(is_bool($curData))
 				{
-					var_dump($curData);
-					var_dump($value);
-					return false;
+					if(($curData === true && $value === "false") || ($curData === false && $value === "true"))
+					{
+						return false;
+					} 
+				}
+				else
+				{	
+					if(strval($curData) !== $value)
+					{
+						return false;
+					}
 				} 
 			}
 			if($type == 2)
 			{
 				if(is_null($curData))
 				{
-					var_dump($curData);
-					
 					return false;		
 				}
 			}
 			if($type == 3)
 			{
+				
 				if(!is_null($curData))
 				{
-					 var_dump($curData);
 					return false;	
 				}
 			}
@@ -240,38 +247,62 @@ class Service_Page_Case extends Service_Page_Base
 		return $curResult;
 	}
 	
+	private function getFromCaseOut($CaseId, $fromCaseId, $outputArray)
+	{
+		$service = new Service_Data_Case();
+		$result = $this->getData($fromCaseId);
+		for($j = 0; $j < count($outputArray); $j++)
+		{
+			$fromField = $outputArray[$j]['FromField'];
+			$field = $outputArray[$j]['Field'];
+			$value = $this->getResultByField($result, $fromField);
+			
+			//插入到参数表中
+			$service->InsertOrUpdateInput($CaseId, $field, $value);
+			//检查是否有check的内容和FromField相等的
+			$checkPoint = $service->getResVal0Fromcase($CaseId, $fromField);
+			if(is_array($checkPoint))
+			{
+				$field = $checkPoint[0]['Field'];
+				$service->InsertOrUpdateResVal($CaseId, $field, $value);
+			}
+		}
+		unset($service);
+	}
+	
 	//拿接口的数据
 	private function getData($CaseId)
 	{
 		$service = new Service_Data_Case();
 		$caseDesResult = $service->getCaseDesByCaseId($CaseId);
-		//本身case的输入是固定的情况
-		$paramsArray = $service->getCaseInput($CaseId);
-		//查找输入参数是其它case的入参的情况
-		$fromCaseInArray = $service->getInputFromCaseIn($CaseId);
-		//查找输入参数是其它case的出参的情况
-		$fromCaseOutArray = $service->getInputFromCaseOut($CaseId);
-		$fromSignArray = $service->getFromSign($CaseId);
-		$inputArray = array();
-		$inputNum = 0;
-		if(is_array($paramsArray))
-		{
-			$inputArray = $paramsArray;
-			$inputNum  = count($paramsArray);
-		}
 	
-		if(is_array($fromCaseInArray))
+		//查找输入参数是其它case的入参，而它依赖的case也依赖其它case
+		$fromCaseIdArray = $service->getInputFromCaseId($CaseId);
+		//查找case依赖其它case，仅仅是依赖，没有任何参数上依赖
+		$dependIdArray = $service->getCaseDependId($CaseId);
+	
+		if(is_array($fromCaseIdArray))
 		{
-			for($i = 0; $i < count($fromCaseInArray); $i++)
+			//var_dump($fromCaseIdArray);
+			for($i = 0; $i < count($fromCaseIdArray); $i++)
 			{
-				$Field = $fromCaseInArray[$i]['Field'];
-				$Value = $fromCaseInArray[$i]['Value'];
-				$inputArray[$inputNum]['Field'] = $field;
-				$inputArray[$inputNum]['Value'] = $result[0]['Value'];
-				$inputNum++;
+				$fromCaseId = $fromCaseIdArray[$i]['CaseId'];
+				$this->getData($fromCaseId);
 			}
 		}
 		
+		if(is_array($dependIdArray))
+		{
+			//var_dump($dependIdArray);
+			for($i = 0; $i < count($dependIdArray); $i++)
+			{
+				$fromCaseId = $dependIdArray[$i]['FromCaseId'];
+				$this->getData($fromCaseId);
+			}
+		}
+	
+		//查找输入参数是其它case的出参的情况
+		$fromCaseOutArray = $service->getInputFromCaseOut($CaseId);
 		if(is_array($fromCaseOutArray))
 		{
 			$diffFromCaseId = $fromCaseOutArray[0]['FromCaseId'];
@@ -282,59 +313,32 @@ class Service_Page_Case extends Service_Page_Base
 				$fromCaseId = $fromCaseOutArray[$i]['FromCaseId']; 
 				$Field = $fromCaseOutArray[$i]['Field'];
 				$FromField = $fromCaseOutArray[$i]['FromField'];
-				$outputArray[$outputNum]['Field'] = $field;
+				$outputArray[$outputNum]['Field'] = $Field;
 				$outputArray[$outputNum]['FromField'] = $FromField ;
 				$outputNum++;
 				if($fromCaseId != $diffFromCaseId)
 				{
-					$result = $this->getData($fromCaseId);
-					for($j = 0; $j < count($outputArray); $j++)
-					{
-						$fromField = $outputArray[$j]['FromField'];
-						$field = $outputArray[$j]['Field'];
-						$value = $this->getResultByField($result, $fromField);
-						//将这些参数加入到入参数里面
-						$inputArray[$inputNum]['Field'] = $field;
-						$inputArray[$inputNum]['Value'] = $curResult;
-						$inputNum++;
-						//插入到参数表中
-						$service->InsertOrUpdateInput($CaseId, $field, $curResult);
-						//检查是否有check的内容和FromField相等的
-						$checkPoint = $service->getResVal0Fromcase($CaseId, $fromField);
-						if(is_array($checkPoint))
-						{
-							$field = $checkPoint[0]['Field'];
-							$service->InsertOrUpdateResVal($CaseId, $field, $curResult);
-						}
-					}
+					$this->getFromCaseOut($CaseId, $fromCaseId, $outputArray);
+					$outputArray = array();
+					$outputNum = 0;
 				}
 			}
-			$result = $this->getData($fromCaseId);
-			for($j = 0; $j < count($outputArray); $j++)
-			{
-				$fromField = $outputArray[$j]['FromField'];
-				$field = $outputArray[$j]['Field'];
-				$value = $this->getResultByField($result, $fromField);
-				//将这些参数加入到入参数里面
-				$inputArray[$inputNum]['Field'] = $field;
-				$inputArray[$inputNum]['Value'] = $curResult;
-				$inputNum++;
-				//插入到参数表中
-				$service->InsertOrUpdateInput($CaseId, $field, $curResult);
-				//检查是否有check的内容和FromField相等的
-				$checkPoint = $service->getResVal0Fromcase($CaseId, $fromField);
-				if(is_array($checkPoint))
-				{
-					$field = $checkPoint[0]['Field'];
-					$service->InsertOrUpdateResVal($CaseId, $field, $curResult);
-				}
-			}
+			$this->getFromCaseOut($CaseId, $fromCaseId, $outputArray);
 		}
-
+		
+		$service->InsertOrUpdateAutocaseInput($CaseId);
+		
+		//最终case的输入
+		$inputArray = $service->getCaseInput($CaseId);
+		$inputNum = count($inputArray);
+	
+		//查找依赖签名的情况
+		$fromSignArray = $service->getFromSign($CaseId);
 		if(is_array($fromSignArray))
 		{
 				$field = $fromSignArray[0]['Field'];
-				$url = "http://cq01-ocean-13.epc.baidu.com:8240/car/sign/wallet";
+				//$url = "http://cq01-ocean-13.epc.baidu.com:8240/car/sign/wallet";
+				$url = "http://nj03-map-carlife-caroil01.nj03.baidu.com:8240/autotest/sign/wallet";
 				$data = $this->requestPost($url, $inputArray);
 				$inputArray[$inputNum]['Field'] = $field;
 				$inputArray[$inputNum]['Value'] = $data;
@@ -372,7 +376,7 @@ class Service_Page_Case extends Service_Page_Base
 	private function checkOneCase($CaseId)
 	{
 		$data = $this->getData($CaseId);
-		if($data == false)
+		if($data === false)
 		{
 			return false;
 		}
@@ -380,22 +384,23 @@ class Service_Page_Case extends Service_Page_Base
 		$check1 = $service->getCaseRes($CaseId);
 		$check2 = $service->getResVal1FromCase($CaseId);
 		$checkArray = array();
-		if(is_array($Check1))
+		if(is_array($check1))
 			$checkArray = $check1;
 		$checkNum = count($checkArray);
-		for($i = 0; $i < count($check2); $i++)
+		if(is_array($check2))
 		{
-			$checkArray[$checkNum]['CaseId'] = $check2[$i]['CaseId'];
-			$checkArray[$checkNum]['Field'] = $check2[$i]['Field'];
-			$checkArray[$checkNum]['Type'] = 1;
-			$checkArray[$checkNum]['Value'] = $check2[$i]['Value'];
-			$checkNum++;
+			for($i = 0; $i < count($check2); $i++)
+			{
+				$checkArray[$checkNum]['CaseId'] = $check2[$i]['CaseId'];
+				$checkArray[$checkNum]['Field'] = $check2[$i]['Field'];
+				$checkArray[$checkNum]['Type'] = 1;
+				$checkArray[$checkNum]['Value'] = $check2[$i]['Value'];
+				$checkNum++;
+			}
 		}
-		var_dump($data);
 		var_dump($checkArray);
 		$check = $this->checkResult($data, $checkArray);
 		unset($service);
-		var_dump($check);
 		return $check;
 	}
 

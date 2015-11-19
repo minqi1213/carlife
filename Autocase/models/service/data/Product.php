@@ -11,7 +11,7 @@
 class Service_Data_Product extends Service_Data_Db
 {
     //数据库链接key
-    private $_cluster = 'car';
+    private $_cluster = 'autotest';
     //接口表
     private $_product_table = '`product`';
     
@@ -39,7 +39,14 @@ class Service_Data_Product extends Service_Data_Db
         //执行查询
         $tmp = $this->_db->select($this->_product_table, $fields, $conditions, null, null);
         $this->_setExecuteInfo();
-        $result = isset($tmp[0]) ? $tmp[0] : true;
+        //数据库连接断了，重新连接 
+        if($executeInfo['errno'] == 2006)
+        {
+            $this->_db = Bd_Db_ConnMgr::getConn($this->_cluster);
+            $tmp = $this->_db->select($this->_product_table, $fields, $conditions, null, null);
+			$this->_setExecuteInfo();
+        }
+		$result = isset($tmp[0]) ? $tmp[0] : true;
         if (!isset($tmp[0]) && $this->_db->errno) {
             $this->_setError(Conf_Error::DB_EXECUTE_ERRNO);
             $result = false;

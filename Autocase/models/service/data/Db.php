@@ -57,7 +57,7 @@ abstract class Service_Data_Db
 	 */
 	protected function _setExecuteInfo(){
 		$tmp = array('sql' => $this->_db->lastSQL, 'errno' => $this->_db->errno, 'error' => $this->_db->error);
-		var_dump($tmp);
+		//var_dump($tmp);
 		$this->_db_execute_info[] = $tmp;
 	}
 

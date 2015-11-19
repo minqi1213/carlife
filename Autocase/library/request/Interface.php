@@ -26,7 +26,7 @@ class Request_Interface
 			switch($v) {
 				// 必须提供，而且正整数
 				case 'product_id':
-					if (!isset($params[$v]) || empty($params[$v])) {
+					if (!isset($params[$v]) || $params[$v] == "") {
 						$errno = Conf_Error::PARAMETER_EMPTY_ERRNO;
 					} elseif (intval($params[$v]) <= 0) {
 						$errno = Conf_Error::PARAMETER_ILLEGAL_ERRNO;
@@ -53,12 +53,12 @@ class Request_Interface
 			switch($v) {
 				case 'Url':
 				case 'Name':
-					if (!isset($params[$v]) || empty($params[$v])) {
+					if (!isset($params[$v]) || $params[$v] == "") {
 						$errno = Conf_Error::PARAMETER_EMPTY_ERRNO;
 					}
 					break;
 				case 'ProductId':
-					if (!isset($params[$v]) || empty($params[$v])) {
+					if (!isset($params[$v]) || $params[$v] == "") {
 						$errno = Conf_Error::PARAMETER_EMPTY_ERRNO;
 					} elseif (intval($params[$v]) <= 0) {
 						$errno = Conf_Error::PARAMETER_ILLEGAL_ERRNO;
