@@ -1,0 +1,11 @@
+
+.request-rely-button{
+    float:left;
+    margin-right: 10px;
+}
+
+.request-rely-close-button{
+    float:left;
+    margin-left:-20px;
+    margin-right: 0px;
+}

@@ -157,13 +157,13 @@ window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileS
  */
 
 pm.init = function () {
-    //Handlebars.partials = Handlebars.templates;
+    Handlebars.partials = Handlebars.templates;
     //pm.history.init();
     //pm.collections.init();
     //pm.settings.init();
-    //pm.layout.init();
-    //pm.editor.init();
-    //pm.jsonlint.init();
+    pm.layout.init();
+    pm.editor.init();
+    pm.jsonlint.init();
     pm.request.init();
     pm.urlCache.refreshAutoComplete();
     //pm.helpers.init();
@@ -4594,6 +4594,7 @@ pm.request = {
                 pm.request.openHeaderEditor();
             }
         });
+        pm.request.openHeaderEditor();
     },
 
     //把request以json形式返回
@@ -5256,12 +5257,15 @@ pm.request = {
         },
 
         loadCookies:function (url) {
-            chrome.cookies.getAll({url:url}, function (cookies) {
+           /* chrome.cookies.getAll({url:url}, function (cookies) {
                 var count;
                 pm.request.response.renderCookies(cookies);
-            });
+            });*/
         },
 
+        //设置返回数据显示方式
+        //language：javascript(json)、html、text
+        //format：parsed、raw、preview
         setFormat:function (language, response, format, forceCreate) {
             //Keep CodeMirror div visible otherwise the response gets cut off
             $('#response-as-code').css("display", "block");
@@ -6173,13 +6177,14 @@ pm.request = {
         pm.request.xhr = xhr;
 
         //Save the request
+        /*
         if (pm.settings.get("autoSaveRequest")) {
             pm.history.addRequest(originalUrl,
                 method,
                 pm.request.getPackedHeaders(),
                 originalData,
                 pm.request.dataMode);
-        }
+        }*/
 
         //Show the final UI
         pm.request.updateUiPostSending();
